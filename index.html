@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MIT Student ERP</title>
+
+<style>
+body{margin:0;font-family:Arial;background:#f3f5fb}
+
+/* LOGIN */
+.container{display:flex;height:100vh}
+.left{flex:2;background:linear-gradient(#0b1d4a,#162f7a)}
+.right{flex:1;background:#fff;padding:50px}
+input{width:100%;padding:12px;margin:10px 0;border:1px solid #ccc;border-radius:6px}
+button{padding:12px;background:#0b1d4a;color:#fff;border:none;border-radius:6px;cursor:pointer;width:100%}
+.captcha-box{display:flex;gap:10px;align-items:center}
+.captcha{background:#eef1ff;padding:10px 18px;font-weight:bold}
+.error{color:red}
+
+/* DASHBOARD + RESULT */
+#dashboard,#resultPage{display:none}
+
+.topbar{background:#fff;padding:15px 30px;display:flex;justify-content:space-between;box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.result-btn{background:#0b1d4a;color:#fff;padding:8px 16px;border-radius:6px;cursor:pointer}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:30px}
+.stat{background:#fff;padding:25px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+.big{font-size:32px;color:#0b1d4a}
+
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;padding:0 30px 30px}
+
+.card{background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.1)}
+
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px;border-bottom:1px solid #ddd;text-align:center}
+
+.notice{padding:10px;border-left:5px solid #0b1d4a;background:#eef1ff;margin-bottom:8px}
+
+.links a{display:block;color:#0b1d4a;margin:6px 0;font-weight:bold;text-decoration:none}
+
+/* RESULT */
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:30px}
+.summary div{background:#fff;padding:20px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,.1);text-align:center;font-size:22px;color:#0b1d4a;font-weight:bold}
+
+.resultTable{padding:0 30px 30px}
+
+.semBtns{padding:30px}
+.semBtns button{width:auto;margin-right:10px}
+
+.footer{background:#0b1d4a;color:white;text-align:center;padding:12px}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div class="container" id="loginPage">
+<div class="left"></div>
+<div class="right">
+<h2>MIT Academy of Engineering</h2>
+
+<input id="prn" placeholder="PRN">
+<input id="password" type="password" placeholder="Password">
+
+<div class="captcha-box">
+<div class="captcha" id="cap"></div>
+<span onclick="genCap()">🔄</span>
+</div>
+
+<input id="capInput" placeholder="Enter Captcha">
+
+<button onclick="login()">Sign In</button>
+<div class="error" id="msg"></div>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+
+<div class="topbar">
+<h3>MIT Student Dashboard - YASH CHANDRAKANT GALANDE 202401040***</h3>
+<div class="result-btn" onclick="openResult()">Result</div>
+</div>
+
+<div class="stats">
+<div class="stat"><div class="big">96%</div>Attendance</div>
+<div class="stat"><div class="big">19/20</div>Assignments</div>
+<div class="stat"><div class="big">3</div>Announcements</div>
+</div>
+
+<div class="grid">
+
+<div class="card">
+<h3>Attendance</h3>
+<table>
+<tr><th>Subject</th><th>%</th></tr>
+<tr><td>EI</td><td>95%</td></tr>
+<tr><td>DSA</td><td>97%</td></tr>
+<tr><td>OOP Java</td><td>96%</td></tr>
+<tr><td>Maths</td><td>94%</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>Quick Access</h3>
+<div class="links">
+<a href="#">MIT Website</a>
+<a href="#">ERP Portal</a>
+<a href="#">Library</a>
+<a href="#">Exam Cell</a>
+<a href="#">Placement</a>
+</div>
+</div>
+
+<div class="card">
+<h3>Notices</h3>
+<div class="notice">G-Suite Service Unavailable</div>
+<div class="notice">Mid Sem Timetable Released</div>
+<div class="notice">AI Workshop Registration Open</div>
+<div class="notice">Project Review Deadline Extended</div>
+</div>
+
+</div>
+</div>
+
+<!-- RESULT PAGE -->
+<div id="resultPage">
+
+<div class="topbar">
+<h3>Student Result Portal - YASH CHANDRAKANT GALANDE 202401040***</h3>
+<div class="result-btn" onclick="back()">Back</div>
+</div>
+
+<div class="semBtns">
+<button onclick="loadSem(1)">Semester 1</button>
+<button onclick="loadSem(2)">Semester 2</button>
+<button onclick="loadSem(3)">Semester 3</button>
+</div>
+
+<div id="summary" class="summary"></div>
+<div id="resultTable" class="resultTable"></div>
+
+</div>
+
+<div class="footer">
+ISO Certified Academic ERP Portal | Secure Institute System
+</div>
+
+<script>
+let capValue="";
+
+function genCap(){
+capValue=Math.floor(1000+Math.random()*9000);
+cap.innerHTML=capValue;
+}
+genCap();
+
+function login(){
+let p=prn.value;
+let pass=password.value;
+let c=capInput.value;
+let allowed=["202401040179"];
+
+if(c!=capValue){msg.innerHTML="Wrong Captcha!";genCap();return;}
+
+if(allowed.includes(p)&&pass===p){
+loginPage.style.display="none";
+dashboard.style.display="block";
+}else msg.innerHTML="Invalid PRN or Password!";
+}
+
+function openResult(){dashboard.style.display="none";resultPage.style.display="block";}
+function back(){resultPage.style.display="none";dashboard.style.display="block";}
+
+function loadSem(s){
+
+const summaryData={
+1:["8.50","8.50","15 Jan 2025"],
+2:["9.20","8.85","25 Jun 2025"],
+3:["8.65","8.78","08 Feb 2026"],
+
+};
+
+summary.innerHTML=`
+<div>SGPA<br>${summaryData[s][0]}</div>
+<div>CGPA<br>${summaryData[s][1]}</div>
+<div>Result Date<br>${summaryData[s][2]}</div>
+`;
+
+const data={
+1:[
+["C Programming",3,88,"A+",3],
+["Physics",3,82,"A",3],
+["Electronics",3,85,"A",3],
+["Maths I",4,90,"A+",4],
+["Workshop",2,78,"B+",2],
+["EVS",2,80,"A",2]
+
+],
+2:[
+["Data Structures",3,92,"A+",3],
+["OOP Java",3,88,"A+",3],
+["Digital Electronics",3,85,"A",3],
+["Maths II",4,80,"A",4],
+["Python",2,90,"A+",2],
+["Communication",2,82,"A",2]
+],
+3:[
+["Operating Systems",3,87,"A",3],
+["DBMS",3,90,"A+",3],
+["Computer Networks",3,84,"A",3],
+["Embedded Systems",3,86,"A",3],
+["Web Technology",2,88,"A+",2],
+["Mini Project",4,92,"A+",4]
+]
+};
+
+let table=`<table>
+<tr>
+<th>Subject</th>
+<th>Credits</th>
+<th>Marks</th>
+<th>Grade</th>
+<th>Earned Credits</th>
+</tr>`;
+
+data[s].forEach(r=>{
+table+=`<tr>
+<td>${r[0]}</td>
+<td>${r[1]}</td>
+<td>${r[2]}</td>
+<td>${r[3]}</td>
+<td>${r[4]}</td>
+</tr>`;
+});
+
+table+=`</table>`;
+
+resultTable.innerHTML=table;
+}
+</script>
+
+</body>
+</html>
